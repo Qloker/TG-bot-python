@@ -14,7 +14,7 @@ def get_weather(lat, lon):
         return weather_desc, temperature
        # return data['weather'][0]['description'], data['main']['temp'] - 273.15s
     else:
-        return 0, 0
+        return 1, 1
 
 
 test = get_weather(59, 30)

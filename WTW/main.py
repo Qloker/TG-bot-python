@@ -29,6 +29,7 @@ def translate_text(text, from_lang, to_lang):
 
 
 #функция получения погоды
+'''
 def get_weather(lat, lon):
     params = {'lat': lat, 'lon': lon, 'appid': API_KEY}
     response = requests.get(WEATHER_URL, params = params)
@@ -42,7 +43,7 @@ def get_weather(lat, lon):
        # return data['weather'][0]['description'], data['main']['temp'] - 273.15
     else:
         return None, None
-
+'''
 
 #Создание клавиатуры
 keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -87,6 +88,7 @@ def handle_message(message):
 
     # Кнопка рандомного фильма
     elif message.text == 'Заролить фильмец':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец', reply_markup=keyboard)
         film = get_film.random_movie_search()
         photo = get_film.get_image(film['image'])
         if photo == 'Без фото':
@@ -113,14 +115,15 @@ def handle_message(message):
 
 @bot.message_handler(content_types=['location'])
 def share_geo(message):
-    lat, lon = message.location.latitude, message.location.longitude
-    print(lat, lon)
-    weather = getWeather
-    description, temperature = weather.get_weather(lat, lon)
-    if description and temperature:
+    lat, lon = message.location.latitude, message.location.longitude     #получение широты и долгоы от бота
+    weather = getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
+    description, temperature = weather
+
+    # не равно 1, потому что если будет беда с запросом, то функция вернет 1 1
+    if description != 1 and temperature != 1:
         response_text = f'Сейчас на улице {description}, температура {temperature:.1f} градусов'
     else:
-        response_text = 'Че то не получилось'
+        response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
     bot.send_message(message.chat.id, response_text)
 
 '''
