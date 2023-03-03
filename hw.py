@@ -6,4 +6,6 @@ Index of ,: {text.find(',')}''')
 n = '123'
 asd = 'asdwww'
 asda = 'aaaasdasdasd '
+
+new_text = 'asdasdsssss'
 # END 
