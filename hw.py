@@ -7,7 +7,7 @@ n = '123'
 asd = 'asdwww'
 asda = 'aaaasdasdasd '
 
-new_text = 'asdasdsssss'
+new_text = 'asdasdssssss'
   #git config --global user.email "bohemawork@gmail.com"
   #git config --global user.name "Ilia"
 # END 
