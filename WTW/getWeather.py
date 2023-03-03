@@ -12,7 +12,7 @@ def get_weather(lat, lon):
         print(data['weather'])
         temperature = data['main']['temp'] - 273.15
         return weather_desc, temperature
-       # return data['weather'][0]['description'], data['main']['temp'] - 273.15
+       # return data['weather'][0]['description'], data['main']['temp'] - 273.15s
     else:
         return 0, 0
 
