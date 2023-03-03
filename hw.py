@@ -8,4 +8,6 @@ asd = 'asdwww'
 asda = 'aaaasdasdasd '
 
 new_text = 'asdasdsssss'
+  #git config --global user.email "bohemawork@gmail.com"
+  #git config --global user.name "Ilia"
 # END 
