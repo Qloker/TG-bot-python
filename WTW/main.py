@@ -4,9 +4,9 @@ import random
 from telebot import types
 import getMovie
 import getWeather
+import translateText
 
 get_film = getMovie
-
 #from telebot import types
 
 #бот телеги и его токен
@@ -115,13 +115,14 @@ def handle_message(message):
 
 @bot.message_handler(content_types=['location'])
 def share_geo(message):
+    translate = translateText
     lat, lon = message.location.latitude, message.location.longitude     #получение широты и долгоы от бота
     weather = getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
     description, temperature = weather
-
+    desc = translateText.translate_text(description, 'en','ru')
     # не равно 1, потому что если будет беда с запросом, то функция вернет 1 1
     if description != 1 and temperature != 1:
-        response_text = f'Сейчас на улице {description}, температура {temperature:.1f} градусов'
+        response_text = f'Сейчас на улице {desc}, температура {temperature:.1f} градусов'
     else:
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
     bot.send_message(message.chat.id, response_text)
