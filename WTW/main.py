@@ -2,67 +2,43 @@ import telebot
 import requests
 import random
 from telebot import types
-import getMovie
-import getWeather
-import translateText
+import Services.getMovie
+import Services.getWeather
+import Services.translateText
 
-get_film = getMovie
+get_film = Services.getMovie
 #from telebot import types
 
 #бот телеги и его токен
 token = '6076273456:AAFuxoL1xd9gxkEKDo1bfwgVieNZumSxSNA'
 bot = telebot.TeleBot(token)
 
-API_KEY = '1d442f5e38536b0955c89d1f7fd0f83c'
-WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather'
-
-def translate_text(text, from_lang, to_lang):
-    url = 'https://api.mymemory.translated.net/get'
-    params = {'q': text, 'langpair': f'{from_lang}|{to_lang}'}
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        translated_text = data['responseData']['translatedText']
-        return translated_text
-    else:
-        return None
-
-
-#функция получения погоды
-'''
-def get_weather(lat, lon):
-    params = {'lat': lat, 'lon': lon, 'appid': API_KEY}
-    response = requests.get(WEATHER_URL, params = params)
-    if response.status_code == 200:
-        data = response.json()
-        weather_desc = data['weather'][0]['description']
-        print(data)
-        temperature = data['main']['temp'] - 273.15
-        translated_desc = translate_text(weather_desc, 'en', 'ru')
-        return translated_desc, temperature
-       # return data['weather'][0]['description'], data['main']['temp'] - 273.15
-    else:
-        return None, None
-'''
-
 #Создание клавиатуры
 keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+keyboard_for_films = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 
 buttons = [
     types.KeyboardButton('Геолокация', request_location=True),
     types.KeyboardButton('Что это?'),
     types.KeyboardButton('Заролить фильмец'),
-    types.KeyboardButton('Что-то еще11'),
+    types.KeyboardButton('Выбор жанра'),
     types.KeyboardButton('Что-то еще123'),
     types.KeyboardButton('🤡')
 ]
 
-'''
-button1 = telebot.types.KeyboardButton('Поделиться геолокацией', request_location = True)
-button2 = telebot.types.KeyboardButton('Нажми тут')
-button3 = telebot.types.KeyboardButton('ЖЖП')
-'''
+buttons_for_films = [
+    types.KeyboardButton('Комедия'),
+    types.KeyboardButton('Триллер'),
+    types.KeyboardButton('Драма'),
+    types.KeyboardButton('Аниме'),
+    types.KeyboardButton('Блокбастер'),
+    types.KeyboardButton('Мне повезет 🤡'),
+    types.KeyboardButton('Меню 📱')
+]
+
 keyboard.add(*buttons)
+
+keyboard_for_films.add(*buttons_for_films)
 
 #Обработка команд
 @bot.message_handler(commands=['start'])
@@ -103,23 +79,27 @@ def handle_message(message):
             bot.send_message(message.chat.id, film['desk'], reply_markup=keyboard)
             
 
-    elif message.text == 'Что-то еще11':
-        bot.send_message(message.chat.id, 'Жора Жирный Педик', reply_markup=keyboard)
+    elif message.text == 'Выбор жанра':
+        text = 'Выбери жанр, который хочешь посмотреть или зарандомь'
+        bot.send_message(message.chat.id, text=text, reply_markup=keyboard_for_films)
+
     elif message.text == 'Что-то еще123':
         bot.send_message(message.chat.id, 'Жора Жирный Педик', reply_markup=keyboard)
     elif message.text == '🤡':
         bot.send_message(message.chat.id, 'Наконец то ты нажал на себя', reply_markup=keyboard)
+    elif message.text == 'Меню 📱':
+        bot.send_message(message.chat.id, reply_markup=keyboard)
     else:
          bot.send_message(message.chat.id, 'Тыкни в кнопку, а не пиши в чат', reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['location'])
 def share_geo(message):
-    translate = translateText
+    translate = Services.translateText
     lat, lon = message.location.latitude, message.location.longitude     #получение широты и долгоы от бота
-    weather = getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
+    weather = Services.getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
     description, temperature = weather
-    desc = translateText.translate_text(description, 'en','ru')
+    desc = Services.translateText.translate_text(description, 'en','ru')
     # не равно 1, потому что если будет беда с запросом, то функция вернет 1 1
     if description != 1 and temperature != 1:
         response_text = f'Сейчас на улице {desc}, температура {temperature:.1f} градусов'
@@ -127,15 +107,5 @@ def share_geo(message):
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
     bot.send_message(message.chat.id, response_text)
 
-'''
-
-@bot.message_handler(commands=['Нажми тут'])
-def command2(message):
-    bot.send_message(message.chat.id, 'Пs, пока не сделано')
-    
-@bot.message_handler(commands=['ЖЖП'])
-def command3(message):
-    bot.send_message(message.chat.id, 'Жоs sd')
-'''
 bot.polling(none_stop=True)
 

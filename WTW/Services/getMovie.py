@@ -21,7 +21,7 @@ def random_movie_search():
             return(response.status_code)
 
     except requests.exceptions.HTTPError as error:
-        rint('Ошибочка'.format(error))
+        print('Ошибочка'.format(error))
         return(response.status_code)
 
     except requests.exceptions.ConnectionError as error:
