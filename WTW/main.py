@@ -88,7 +88,7 @@ def handle_message(message):
     elif message.text == '🤡':
         bot.send_message(message.chat.id, 'Наконец то ты нажал на себя', reply_markup=keyboard)
     elif message.text == 'Меню 📱':
-        bot.send_message(message.chat.id, reply_markup=keyboard)
+        bot.send_message(message.chat.id, 'Возврат в меню', reply_markup=keyboard)
     else:
          bot.send_message(message.chat.id, 'Тыкни в кнопку, а не пиши в чат', reply_markup=keyboard)
 
