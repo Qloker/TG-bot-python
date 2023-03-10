@@ -6,7 +6,7 @@ import getMovie
 import getWeather
 
 get_film = getMovie
-
+buttons_pressed = 0
 #from telebot import types
 
 #бот телеги и его токен
@@ -67,6 +67,9 @@ keyboard.add(*buttons)
 #Обработка команд
 @bot.message_handler(commands=['start'])
 def start(message):
+    global buttons_pressed
+    buttons_pressed = buttons_pressed + 1
+    print(buttons_pressed)
     text_answer = 'Давай поможем тебе выбрать че надеть.\nДля этого мне потребуется твоя геолокация, чтобы я мог глянуть погоду и подсказать\nВообще я тут все подряд решил тестить так что воооот'
     bot.send_message(message.chat.id, text_answer, reply_markup=keyboard)
 
@@ -77,6 +80,9 @@ def help(message):
 
 @bot.message_handler(content_types=['text'])
 def handle_message(message):
+    global buttons_pressed
+    buttons_pressed = buttons_pressed + 1
+    print(buttons_pressed)
     # Кнопка Что это
     if message.text == 'Что это?':
         text_answer = '''Пилю ботиса
@@ -115,6 +121,9 @@ def handle_message(message):
 
 @bot.message_handler(content_types=['location'])
 def share_geo(message):
+    global buttons_pressed
+    buttons_pressed = buttons_pressed + 1
+    print(buttons_pressed)
     lat, lon = message.location.latitude, message.location.longitude     #получение широты и долгоы от бота
     weather = getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
     description, temperature = weather
