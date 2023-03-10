@@ -21,7 +21,7 @@ buttons = [
     types.KeyboardButton('Геолокация', request_location=True),
     types.KeyboardButton('Что это?'),
     types.KeyboardButton('Заролить фильмец'),
-    types.KeyboardButton('Выбор жанра'),
+    types.KeyboardButton('Выбрать фильмец'),
     types.KeyboardButton('Что-то еще123'),
     types.KeyboardButton('🤡')
 ]
@@ -66,6 +66,7 @@ def handle_message(message):
     elif message.text == 'Заролить фильмец':
         bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец', reply_markup=keyboard)
         film = get_film.random_movie_search()
+        print(film)
         photo = get_film.get_image(film['image'])
         if photo == 'Без фото':
             print('ERROR')
@@ -79,9 +80,25 @@ def handle_message(message):
             bot.send_message(message.chat.id, film['desk'], reply_markup=keyboard)
             
 
-    elif message.text == 'Выбор жанра':
+    elif message.text == 'Выбрать фильмец':
         text = 'Выбери жанр, который хочешь посмотреть или зарандомь'
         bot.send_message(message.chat.id, text=text, reply_markup=keyboard_for_films)
+    
+    elif message.text == 'Комедия':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        if photo == 'Без фото':
+            print('ERROR')
+        else:
+            bot.send_photo(chat_id=message.chat.id, photo=photo)
+
+        if film['desc'] == 'None':
+            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        else:
+            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+            bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
 
     elif message.text == 'Что-то еще123':
         bot.send_message(message.chat.id, 'Жора Жирный Педик', reply_markup=keyboard)
@@ -89,8 +106,8 @@ def handle_message(message):
         bot.send_message(message.chat.id, 'Наконец то ты нажал на себя', reply_markup=keyboard)
     elif message.text == 'Меню 📱':
         bot.send_message(message.chat.id, 'Возврат в меню', reply_markup=keyboard)
-    else:
-         bot.send_message(message.chat.id, 'Тыкни в кнопку, а не пиши в чат', reply_markup=keyboard)
+    #else:
+        # bot.send_message(message.chat.id, 'Тыкни в кнопку, а не пиши в чат', reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['location'])
