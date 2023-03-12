@@ -6,7 +6,7 @@ import Services.getMovie
 import Services.getWeather
 import Services.translateText
 
-get_film = getMovie
+get_film = Services.getMovie
 
 #from telebot import types
 
@@ -32,10 +32,11 @@ buttons_for_films = [
     types.KeyboardButton('Триллер'),
     types.KeyboardButton('Драма'),
     types.KeyboardButton('Аниме'),
-    types.KeyboardButton('Блокбастер'),
-    types.KeyboardButton('Мне повезет 🤡'),
+    types.KeyboardButton('Детектив'),
+    types.KeyboardButton('Заролить фильм'),
     types.KeyboardButton('Меню 📱')
 ]
+buttons_pressed = 0
 
 keyboard.add(*buttons)
 
@@ -60,6 +61,7 @@ def handle_message(message):
     global buttons_pressed
     buttons_pressed = buttons_pressed + 1
     print(buttons_pressed)
+
     # Кнопка Что это
     if message.text == 'Что это?':
         text_answer = '''Пилю ботиса
@@ -68,6 +70,7 @@ def handle_message(message):
 В планах сделать меню с рандомным поиском после выбора жанра
         '''
         bot.send_message(message.chat.id, text_answer, reply_markup=keyboard)
+
 
     # Кнопка рандомного фильма
     elif message.text == 'Заролить фильмец':
@@ -80,37 +83,81 @@ def handle_message(message):
         else:
             bot.send_photo(chat_id=message.chat.id, photo=photo)
 
-        if film['desk'] == 'None':
-            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard)
-        else:
-            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard)
-            bot.send_message(message.chat.id, film['desk'], reply_markup=keyboard)
-            
-
-    elif message.text == 'Выбрать фильмец':
-        text = 'Выбери жанр, который хочешь посмотреть или зарандомь'
-        bot.send_message(message.chat.id, text=text, reply_markup=keyboard_for_films)
-    
-    elif message.text == 'Комедия':
-        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
-       
-        film = Services.getMovie.search_with_genre(message.text.lower())
-        photo = get_film.get_image(film['img_url'])
-        if photo == 'Без фото':
-            print('ERROR')
-        else:
-            bot.send_photo(chat_id=message.chat.id, photo=photo)
-
         if film['desc'] == 'None':
-            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard)
         else:
-            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
-            bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+            bot.send_message(message.chat.id, film['name'], reply_markup=keyboard)
+            bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard)
+            
 
     elif message.text == 'Что-то еще123':
         bot.send_message(message.chat.id, 'Жора Жирный Педик', reply_markup=keyboard)
     elif message.text == '🤡':
         bot.send_message(message.chat.id, 'Наконец то ты нажал на себя', reply_markup=keyboard)
+
+
+    elif message.text == 'Выбрать фильмец':
+        text = 'Выбери жанр, который хочешь посмотреть или зарандомь'
+        bot.send_message(message.chat.id, text=text, reply_markup=keyboard_for_films)
+    
+   
+    # Жанры фильмов
+    elif message.text == 'Комедия':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+    elif message.text == 'Триллер':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+    elif message.text == 'Драма':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+    elif message.text == 'Аниме':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+    elif message.text == 'Детектив':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец')
+       
+        film = Services.getMovie.search_with_genre(message.text.lower())
+        photo = get_film.get_image(film['img_url'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+    elif message.text == 'Заролить фильм':
+        bot.send_message(message.chat.id, 'Секундочку, уже ищу для тебя фильмец', reply_markup=keyboard)
+
+        film = Services.getMovie.random_movie_search()
+        photo = get_film.get_image(film['image'])
+        bot.send_photo(chat_id=message.chat.id, photo=photo)
+        bot.send_message(message.chat.id, film['name'], reply_markup=keyboard_for_films)
+        bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard_for_films)
+
+
+
     elif message.text == 'Меню 📱':
         bot.send_message(message.chat.id, 'Возврат в меню', reply_markup=keyboard)
     #else:

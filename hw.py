@@ -1,17 +1,25 @@
-text = 'Never forget what you are, for surely the world will not'
+'''
+list1 = [3, 0, 2, 2, 5, 1]
 
-# BEGIN (write your solution here)
-print(f'''Index of N: {text.find('N')}
-Index of ,: {text.find(',')}''')
-n = '123'
-asd = 'asdwww'
-asda = 'aaaasdasdasd '
+target = 6
 
-new_text = 'asdasdssssss'
+for i in range(0, len(list1)):
+  for j in range(0, len(list1)):
+    if list1[i] + list1[j] == target:
+      if i != j:
+        print(i, j)
+'''
 
-b = 0
-b = b + 1
-print(b)
-  #git config --global user.email "bohemawork@gmail.com"
-  #git config --global user.name "Ilia"
-# END 
+s = {1: 33}
+asd = None
+if (s or asd) == None:
+  print('GOGOGOGO')
+
+
+l1 = [1, 4, 3, 2, 5, 1]
+s = 10
+while True:
+  if l1[s] == True:
+    print(l1[s])
+  else:
+    s -= 1
