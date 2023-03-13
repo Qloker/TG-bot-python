@@ -5,6 +5,7 @@ from telebot import types
 import Services.getMovie
 import Services.getWeather
 import Services.translateText
+import Services.getClothes
 
 get_film = Services.getMovie
 
@@ -19,7 +20,7 @@ keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 keyboard_for_films = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 
 buttons = [
-    types.KeyboardButton('Геолокация', request_location=True),
+    types.KeyboardButton('Что надеть сегодня?', request_location=True),
     types.KeyboardButton('Что это?'),
     types.KeyboardButton('Заролить фильмец'),
     types.KeyboardButton('Выбрать фильмец'),
@@ -170,12 +171,24 @@ def share_geo(message):
     weather = Services.getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
     description, temperature = weather
     desc = Services.translateText.translate_text(description, 'en','ru')
+
+    clothes = Services.getClothes.get_clothing_by_temp(0)
+    img_cloth1 = Services.getMovie.get_image(clothes[0][1])
+    img_cloth2 = Services.getMovie.get_image(clothes[1][1])
+    img_cloth3 = Services.getMovie.get_image(clothes[2][1])
+
     # не равно 1, потому что если будет беда с запросом, то функция вернет 1 1
     if description != 1 and temperature != 1:
-        response_text = f'Сейчас на улице {desc}, температура {temperature:.1f} градусов'
+        response_text = f'Сейчас на улице {desc}, температура {temperature:.1f} градусов\nДавай подберем тебе одежду'
     else:
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
-    bot.send_message(message.chat.id, response_text)
+    bot.send_message(message.chat.id, response_text, reply_markup=keyboard)
+    bot.send_photo(chat_id=message.chat.id, photo=img_cloth1)
+    bot.send_photo(chat_id=message.chat.id, photo=img_cloth2)
+    bot.send_photo(chat_id=message.chat.id, photo=img_cloth3)
+    bot.send_message(message.chat.id, 'Поздравляю, теперь вы одеты как черт, носи с удовольствием')
+
+
 
 bot.polling(none_stop=True)
 
