@@ -16,7 +16,7 @@ def random_movie_search():
             #print(data)
             #print(data['poster']['url'])
             #print(data['description'])
-            return{'name': data['name'], 'image': data['poster']['url'], 'desc': data['description']}
+            return{'name': data['name'], 'image': data['poster'].get("url", "https://pbs.twimg.com/media/C5OTOt3UEAAExIk.jpg"), 'desc': data['description']}
         else:
             print(response.status_code)
             return(response.status_code)
@@ -53,19 +53,22 @@ def get_image(url):
 def search_with_genre(genre):
     get_random_page = random.randint(1, 3)
     #get_random_score = round(random.uniform(7.4, 9.4), 1)
-    get_random_element = random.randint(0, 10)
-    print(f'''страница {get_random_page}
-    элемент {get_random_element}''')
 
     url2 = f'https://api.kinopoisk.dev/v1/movie?page={get_random_page}&limit=10&name=%21null&description=%21null&logo.url=%21null&genres.name={genre}'
     response = requests.get(url=url2, headers=headers)
     response.raise_for_status()
     data = response.json()
 
-    output = {'name': data['docs'][get_random_element]['name'], 'desc': data['docs'][get_random_element]['description'], 'img_url': data['docs'][get_random_element]['poster']['url']}
+    get_random_element = random.randint(0, (len(data['docs']) - 1))
+    
+    #rint(f'''страница {get_random_page}
+    #элемент {get_random_element}
+    #data - {data}''')
+
+    output = {'name': data['docs'][get_random_element]['name'], 'desc': data['docs'][get_random_element]['description'], 'img_url': data['docs'][get_random_element]['poster'].get("url", "https://pbs.twimg.com/media/C5OTOt3UEAAExIk.jpg")}
 
     #Добавить обработку получения описания и картинки, потому что будет дроп, если там ничего нет
-    print(output)
+    #print(output)
     return output
 
 test = search_with_genre('детектив')

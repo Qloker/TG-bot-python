@@ -7,7 +7,7 @@ url = 'https://api.mymemory.translated.net/get'
 
 def translate_text(text, from_lang, to_lang):
     params = {'q': text, 'langpair': f'{from_lang}|{to_lang}'}
-    print(text)
+    #print(text)
     response = requests.get(url, params=params)
     if response.status_code == 200:
         data = response.json()
@@ -17,5 +17,5 @@ def translate_text(text, from_lang, to_lang):
         return text
 
 
-test = translate_text('Hello world!', 'en', 'ru')
-print(test)
+test = translate_text('few clouds', 'en', 'ru')
+#print(test)

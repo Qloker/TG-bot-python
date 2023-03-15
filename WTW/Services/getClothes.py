@@ -22,7 +22,7 @@ def get_clothing_by_temp(temp):
 tests = get_clothing_by_temp(-1)
 
 dic_cloth = {}
-
+#print(tests)
 for i in range(len(tests)):
     dic_cloth[tests[i][0]] = random.choice(tests[i][1])
-print(dic_cloth)
+#print(dic_cloth)

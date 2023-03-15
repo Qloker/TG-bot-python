@@ -9,7 +9,7 @@ def get_weather(lat, lon):
     if response.status_code == 200:
         data = response.json()
         weather_desc = data['weather'][0]['description']
-        print(data['weather'])
+        #print(data['weather'])
         temperature = data['main']['temp'] - 273.15
         return weather_desc, temperature
        # return data['weather'][0]['description'], data['main']['temp'] - 273.15s

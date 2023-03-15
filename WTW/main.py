@@ -172,17 +172,29 @@ def share_geo(message):
     description, temperature = weather
     desc = Services.translateText.translate_text(description, 'en','ru')
 
-    clothes = Services.getClothes.get_clothing_by_temp(0)
-    img_cloth1 = Services.getMovie.get_image(clothes[0][1])
-    img_cloth2 = Services.getMovie.get_image(clothes[1][1])
-    img_cloth3 = Services.getMovie.get_image(clothes[2][1])
-
     # не равно 1, потому что если будет беда с запросом, то функция вернет 1 1
     if description != 1 and temperature != 1:
         response_text = f'Сейчас на улице {desc}, температура {temperature:.1f} градусов\nДавай подберем тебе одежду'
     else:
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
+
     bot.send_message(message.chat.id, response_text, reply_markup=keyboard)
+
+    clothes = Services.getClothes.get_clothing_by_temp(0)
+    cloth = []
+    img_clothes = []
+
+    for i in range(0, len(clothes)):
+        cloth.append(clothes[i][1][random.randint(0, ((len(clothes[i][1]) - 1)))])
+
+    for i in range(0, len(cloth)):
+        img_clothes.append(Services.getMovie.get_image(cloth[i]))
+    
+    img_cloth1 = Services.getMovie.get_image(clothes[0][1][random.randint(0, (len(clothes[0][1]) - 1))])
+    img_cloth2 = Services.getMovie.get_image(clothes[1][1][0])
+    img_cloth3 = Services.getMovie.get_image(clothes[2][1][0])
+
+    #доделать отправку в фор
     bot.send_photo(chat_id=message.chat.id, photo=img_cloth1)
     bot.send_photo(chat_id=message.chat.id, photo=img_cloth2)
     bot.send_photo(chat_id=message.chat.id, photo=img_cloth3)
