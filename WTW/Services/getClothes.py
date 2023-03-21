@@ -8,6 +8,13 @@ def get_clothing_by_temp(temp):
     cursor.execute('''
     SELECT name, url FROM clothing
     WHERE temp_min <= ? AND temp_max >= ?
+    ORDER BY CASE name
+                WHEN 'Куртка' THEN 1
+                WHEN 'Футболка' THEN 2
+                WHEN 'Штаны' THEN 3
+                WHEN 'Аксессуар' THEN 4
+                ELSE 5
+            END
     ''', (temp, temp))
 
     data = cursor.fetchall()
@@ -22,7 +29,7 @@ def get_clothing_by_temp(temp):
 tests = get_clothing_by_temp(-1)
 
 dic_cloth = {}
-#print(tests)
+print(tests)
 for i in range(len(tests)):
     dic_cloth[tests[i][0]] = random.choice(tests[i][1])
 #print(dic_cloth)

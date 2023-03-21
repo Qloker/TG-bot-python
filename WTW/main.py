@@ -179,8 +179,8 @@ def share_geo(message):
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
 
     bot.send_message(message.chat.id, response_text, reply_markup=keyboard)
-
-    clothes = Services.getClothes.get_clothing_by_temp(0)
+    print(round(temperature))
+    clothes = Services.getClothes.get_clothing_by_temp(round(temperature))
     cloth = []
     img_clothes = []
 
@@ -189,15 +189,10 @@ def share_geo(message):
 
     for i in range(0, len(cloth)):
         img_clothes.append(Services.getMovie.get_image(cloth[i]))
-    
-    img_cloth1 = Services.getMovie.get_image(clothes[0][1][random.randint(0, (len(clothes[0][1]) - 1))])
-    img_cloth2 = Services.getMovie.get_image(clothes[1][1][0])
-    img_cloth3 = Services.getMovie.get_image(clothes[2][1][0])
 
-    #доделать отправку в фор
-    bot.send_photo(chat_id=message.chat.id, photo=img_cloth1)
-    bot.send_photo(chat_id=message.chat.id, photo=img_cloth2)
-    bot.send_photo(chat_id=message.chat.id, photo=img_cloth3)
+    for i in cloth:
+        bot.send_photo(chat_id=message.chat.id, photo=i)
+
     bot.send_message(message.chat.id, 'Поздравляю, теперь вы одеты как черт, носи с удовольствием')
 
 

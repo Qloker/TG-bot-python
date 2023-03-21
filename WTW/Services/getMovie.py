@@ -26,30 +26,36 @@ def random_movie_search():
         return(response.status_code)
 
     except requests.exceptions.ConnectionError as error:
-        print('Ошибка при соединении'.format(error))
+        print('Ошибка при получении фильма'.format(error))
         return(response.status_code)
         
 
 def get_image(url):
+    default_url = "https://pbs.twimg.com/media/C5OTOt3UEAAExIk.jpg"
     try:
         response = requests.get(url)
         response.raise_for_status()
         if response.status_code == 200:
             photo = response.content
             return photo
-        else:
-            return 'Без фото'
 
     except requests.exceptions.HTTPError as error:
         print('Ошибочка'.format(error)) 
-        return 'Без фото'
+        response = requests.get(default_url)
+        response.raise_for_status()
+        if response.status_code == 200:
+            photo = response.content
+            return photo
 
     except requests.exceptions.ConnectionError as error:
-        print('Ошибка при соединении'.format(error))
-        return 'Без фото'
+        print('Ошибка при получении картинки'.format(error))
+        response = requests.get(default_url)
+        response.raise_for_status()
+        if response.status_code == 200:
+            photo = response.content
+            return photo
     
 
-#Надо сделать рандомное подставление рейтинга от 7 до 10 и вставить в запрос + рандомная страница 1-5 + рандомный элемент списка
 def search_with_genre(genre):
     get_random_page = random.randint(1, 3)
     #get_random_score = round(random.uniform(7.4, 9.4), 1)
@@ -67,7 +73,6 @@ def search_with_genre(genre):
 
     output = {'name': data['docs'][get_random_element]['name'], 'desc': data['docs'][get_random_element]['description'], 'img_url': data['docs'][get_random_element]['poster'].get("url", "https://pbs.twimg.com/media/C5OTOt3UEAAExIk.jpg")}
 
-    #Добавить обработку получения описания и картинки, потому что будет дроп, если там ничего нет
     #print(output)
     return output
 
