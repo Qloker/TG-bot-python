@@ -184,12 +184,15 @@ def share_geo(message):
     cloth = []
     img_clothes = []
 
+    #Получение случайной вещи (ссылки) из массива с ссылками
     for i in range(0, len(clothes)):
         cloth.append(clothes[i][1][random.randint(0, ((len(clothes[i][1]) - 1)))])
 
+    #Получение картинки из массива
     for i in range(0, len(cloth)):
         img_clothes.append(Services.getMovie.get_image(cloth[i]))
 
+    #отправка ботом картинки в чат
     for i in cloth:
         bot.send_photo(chat_id=message.chat.id, photo=i)
 
