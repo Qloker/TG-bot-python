@@ -6,6 +6,7 @@ import Services.getMovie
 import Services.getWeather
 import Services.translateText
 import Services.getClothes
+import Services.getJoke
 
 get_film = Services.getMovie
 
@@ -24,7 +25,7 @@ buttons = [
     types.KeyboardButton('Что это?'),
     types.KeyboardButton('Заролить фильмец'),
     types.KeyboardButton('Выбрать фильмец'),
-    types.KeyboardButton('Что-то еще123'),
+    types.KeyboardButton('Анекдот'),
     types.KeyboardButton('🤡')
 ]
 
@@ -91,8 +92,10 @@ def handle_message(message):
             bot.send_message(message.chat.id, film['desc'], reply_markup=keyboard)
             
 
-    elif message.text == 'Что-то еще123':
-        bot.send_message(message.chat.id, 'Жора Жирный Педик', reply_markup=keyboard)
+    elif message.text == 'Анекдот':
+        joke = Services.getJoke.random_joke()
+        bot.send_message(message.chat.id, joke, reply_markup=keyboard)
+        
     elif message.text == '🤡':
         bot.send_message(message.chat.id, 'Наконец то ты нажал на себя', reply_markup=keyboard)
 
@@ -167,8 +170,12 @@ def handle_message(message):
 
 @bot.message_handler(content_types=['location'])
 def share_geo(message):
+    global buttons_pressed
+    buttons_pressed = buttons_pressed + 1
+    print(buttons_pressed)
+
     lat, lon = message.location.latitude, message.location.longitude     #получение широты и долгоы от бота
-    weather = Services.getWeather.get_weather(lat, lon)                           #получение погоды через функция запроса (вынесена)
+    weather = Services.getWeather.get_weather(lat, lon)                  #получение погоды через функция запроса (вынесена)
     description, temperature = weather
     desc = Services.translateText.translate_text(description, 'en','ru')
 
@@ -179,22 +186,25 @@ def share_geo(message):
         response_text = 'Че то не получилось. Возможно, не удалось получить данные о геолокации'
 
     bot.send_message(message.chat.id, response_text, reply_markup=keyboard)
-    print(round(temperature))
+
     clothes = Services.getClothes.get_clothing_by_temp(round(temperature))
     cloth = []
     img_clothes = []
 
     #Получение случайной вещи (ссылки) из массива с ссылками
     for i in range(0, len(clothes)):
+        c = clothes[i][1][random.randint(0, ((len(clothes[i][1]) - 1)))]
         cloth.append(clothes[i][1][random.randint(0, ((len(clothes[i][1]) - 1)))])
+        img = Services.getMovie.get_image(c)
+        bot.send_photo(chat_id=message.chat.id, photo=img)
 
     #Получение картинки из массива
-    for i in range(0, len(cloth)):
-        img_clothes.append(Services.getMovie.get_image(cloth[i]))
+    #for i in range(0, len(cloth)):
+      #  img_clothes.append(Services.getMovie.get_image(cloth[i]))
 
     #отправка ботом картинки в чат
-    for i in cloth:
-        bot.send_photo(chat_id=message.chat.id, photo=i)
+   # for i in cloth:
+     #   bot.send_photo(chat_id=message.chat.id, photo=i)
 
     bot.send_message(message.chat.id, 'Поздравляю, теперь вы одеты как черт, носи с удовольствием')
 
