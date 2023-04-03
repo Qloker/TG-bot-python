@@ -11,13 +11,13 @@ def get_stored_user_name():
     try:
         with open(file) as f_obj:
             user_name = json.load(f_obj)
-    except FileNotFoundError:
+    except:
         return None
     else:
         return user_name
 
 def greet_user():
-
+    
     global file
 
     user_name = get_stored_user_name()
@@ -29,5 +29,5 @@ def greet_user():
         user_name = input('type username\n')
         with open(file, 'w') as f_obj:
             json.dump(user_name, f_obj)
-    print('saved' + ' ' + user_name)
+            print('saved' + ' ' + user_name)
 greet_user()
